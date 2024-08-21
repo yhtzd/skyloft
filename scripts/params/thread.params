@@ -1,0 +1,2 @@
+#define USED_CPUS        1
+#define USED_HW_CPU_LIST "1"

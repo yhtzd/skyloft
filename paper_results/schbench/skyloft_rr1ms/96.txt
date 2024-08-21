@@ -1,0 +1,37 @@
+Wakeup Latencies percentiles (usec) runtime 5 (s) (51693 total samples)
+	  50.0th: 903        (15500 samples)
+	  90.0th: 1878       (20746 samples)
+	* 99.0th: 2788       (4588 samples)
+	  99.9th: 2988       (479 samples)
+	  min=1, max=3012
+Request Latencies percentiles (usec) runtime 5 (s) (51762 total samples)
+	  50.0th: 7480       (15486 samples)
+	  90.0th: 9168       (20938 samples)
+	* 99.0th: 10448      (4434 samples)
+	  99.9th: 11664      (443 samples)
+	  min=2421, max=13266
+RPS percentiles (requests) runtime 5 (s) (6 total samples)
+	  20.0th: 10288      (2 samples)
+	* 50.0th: 10320      (4 samples)
+	  90.0th: 10320      (0 samples)
+	  min=10294, max=10325
+current rps: 10322
+Wakeup Latencies percentiles (usec) runtime 10 (s) (103358 total samples)
+	  50.0th: 903        (31004 samples)
+	  90.0th: 1882       (41487 samples)
+	* 99.0th: 2796       (9195 samples)
+	  99.9th: 2988       (913 samples)
+	  min=1, max=3012
+Request Latencies percentiles (usec) runtime 10 (s) (103551 total samples)
+	  50.0th: 7480       (31077 samples)
+	  90.0th: 9168       (41718 samples)
+	* 99.0th: 10448      (8797 samples)
+	  99.9th: 11664      (911 samples)
+	  min=2421, max=13266
+RPS percentiles (requests) runtime 10 (s) (11 total samples)
+	  20.0th: 10320      (11 samples)
+	* 50.0th: 10320      (0 samples)
+	  90.0th: 10320      (0 samples)
+	  min=10294, max=10327
+current rps: 10327
+timeout: the monitored command dumped core

@@ -1,0 +1,17 @@
+.vscode
+*.o
+*.ko
+*.cmd
+*.mod
+*.mod.c
+*.symvers
+*.order
+.DS_Store
+build/
+main
+.cache/
+__pycache__/
+compile_commands.json
+!extra.symvers
+include/skyloft/uapi/params.h
+include/skyloft/params.h

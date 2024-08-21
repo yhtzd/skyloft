@@ -1,0 +1,55 @@
+Wakeup Latencies percentiles (usec) runtime 5 (s) (7328 total samples)
+	  50.0th: 1          (0 samples)
+	  90.0th: 1          (0 samples)
+	* 99.0th: 2          (451 samples)
+	  99.9th: 2          (0 samples)
+	  min=1, max=4
+Request Latencies percentiles (usec) runtime 5 (s) (7592 total samples)
+	  50.0th: 2636       (0 samples)
+	  90.0th: 2644       (3142 samples)
+	* 99.0th: 2644       (0 samples)
+	  99.9th: 2644       (0 samples)
+	  min=2511, max=2699
+RPS percentiles (requests) runtime 5 (s) (6 total samples)
+	  20.0th: 1518       (5 samples)
+	* 50.0th: 1518       (0 samples)
+	  90.0th: 1522       (1 samples)
+	  min=1516, max=1521
+current rps: 1518
+Wakeup Latencies percentiles (usec) runtime 10 (s) (14511 total samples)
+	  50.0th: 1          (0 samples)
+	  90.0th: 1          (0 samples)
+	* 99.0th: 2          (786 samples)
+	  99.9th: 2          (0 samples)
+	  min=1, max=4
+Request Latencies percentiles (usec) runtime 10 (s) (15180 total samples)
+	  50.0th: 2636       (0 samples)
+	  90.0th: 2644       (6281 samples)
+	* 99.0th: 2644       (0 samples)
+	  99.9th: 2644       (0 samples)
+	  min=2511, max=2699
+RPS percentiles (requests) runtime 10 (s) (11 total samples)
+	  20.0th: 1518       (10 samples)
+	* 50.0th: 1518       (0 samples)
+	  90.0th: 1518       (0 samples)
+	  min=1516, max=1521
+current rps: 1518
+Wakeup Latencies percentiles (usec) runtime 10 (s) (14511 total samples)
+	  50.0th: 1          (0 samples)
+	  90.0th: 1          (0 samples)
+	* 99.0th: 2          (786 samples)
+	  99.9th: 2          (0 samples)
+	  min=1, max=4
+Request Latencies percentiles (usec) runtime 10 (s) (15184 total samples)
+	  50.0th: 2636       (0 samples)
+	  90.0th: 2644       (6285 samples)
+	* 99.0th: 2644       (0 samples)
+	  99.9th: 2644       (0 samples)
+	  min=2511, max=2699
+RPS percentiles (requests) runtime 10 (s) (11 total samples)
+	  20.0th: 1518       (10 samples)
+	* 50.0th: 1518       (0 samples)
+	  90.0th: 1518       (0 samples)
+	  min=1516, max=1521
+average rps: 1518
+timeout: the monitored command dumped core

@@ -1,0 +1,4 @@
+#define USED_CPUS           5
+#define IO_CPU              4
+#define USED_HW_CPU_LIST    "1,2,3,4,22"
+#define MAX_APPS            1

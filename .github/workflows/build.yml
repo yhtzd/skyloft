@@ -1,0 +1,30 @@
+name: Build CI
+
+on: [push, pull_request]
+
+jobs:
+  build-libos:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: sudo apt-get install -y cmake libnuma-dev libgflags-dev zlib1g-dev libzstd-dev
+    - name: Cache build
+      uses: actions/cache@v3
+      with:
+        path: ${{github.workspace}}/build
+        key: ${{ runner.os }}-build-${{ env.cache-name }}
+    - name: Build libos and apps
+      run: CMAKE_ARGS="-DROCKSDB_JOBS=1" SCHED=fifo make DPDK=0
+
+
+  build-kmod:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build kernel module
+      run: make kmod
