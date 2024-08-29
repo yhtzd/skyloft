@@ -2,27 +2,25 @@
  * bitmap.c - a library for bit array manipulation
  */
 
-#include <utils/defs.h>
 #include <utils/bitmap.h>
+#include <utils/defs.h>
 
-static __always_inline int
-bitmap_find_next(unsigned long *bits, int nbits, int pos, bool invert)
+static __always_inline int bitmap_find_next(unsigned long *bits, int nbits, int pos, bool invert)
 {
-	unsigned long val, mask = ~((1UL << BITMAP_POS_SHIFT(pos)) - 1);
-	int idx;
+    unsigned long val, mask = ~((1UL << BITMAP_POS_SHIFT(pos)) - 1);
+    int idx;
 
-	for (idx = align_down(pos, BITS_PER_LONG);
-	     idx < nbits; idx += BITS_PER_LONG) {
-		val = bits[BITMAP_POS_IDX(idx)];
-		if (invert)
-			val = ~val;
-		val &= mask;
-		if (val)
-			return MIN(idx + __builtin_ffsl(val) - 1, nbits);
-		mask = ~0UL;
-	}
+    for (idx = align_down(pos, BITS_PER_LONG); idx < nbits; idx += BITS_PER_LONG) {
+        val = bits[BITMAP_POS_IDX(idx)];
+        if (invert)
+            val = ~val;
+        val &= mask;
+        if (val)
+            return MIN(idx + __builtin_ffsl(val) - 1, nbits);
+        mask = ~0UL;
+    }
 
-	return nbits;
+    return nbits;
 }
 
 /**
@@ -35,7 +33,7 @@ bitmap_find_next(unsigned long *bits, int nbits, int pos, bool invert)
  */
 int bitmap_find_next_cleared(unsigned long *bits, int nbits, int pos)
 {
-	return bitmap_find_next(bits, nbits, pos, true);
+    return bitmap_find_next(bits, nbits, pos, true);
 }
 
 /**
@@ -48,5 +46,5 @@ int bitmap_find_next_cleared(unsigned long *bits, int nbits, int pos)
  */
 int bitmap_find_next_set(unsigned long *bits, int nbits, int pos)
 {
-	return bitmap_find_next(bits, nbits, pos, false);
+    return bitmap_find_next(bits, nbits, pos, false);
 }

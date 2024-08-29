@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <stdint.h>
-
 #include <skyloft/sched.h>
+
+#include <utils/fxsave.h>
 #include <utils/list.h>
 
 enum task_state {
@@ -15,8 +15,8 @@ enum task_state {
     TASK_BLOCKED,
 };
 
-struct switch_frame {
-    /* callee saved registers */
+/* callee saved regs */
+struct callee_saved {
     uint64_t rbx;
     uint64_t rbp;
     uint64_t r12;
@@ -26,6 +26,15 @@ struct switch_frame {
     uint64_t rdi; /* first argument */
     uint64_t rip;
 };
+
+struct switch_frame {
+#ifdef SKYLOFT_FXSAVE
+    struct fxsave fxstate;
+#endif
+    /* points to callee saved regs */
+    struct callee_saved callee;
+};
+
 struct stack {
     union {
         void *ptr;
@@ -51,6 +60,7 @@ struct task {
     uint8_t stack_busy;
     bool allow_preempt;
     bool skip_free;
+    bool init;
     uint64_t rsp;
     uint8_t pad0[16];
     /* cache line 1~2 */
@@ -61,7 +71,6 @@ struct task {
 #define task_is_runnable(t) ((t)->state == TASK_RUNNABLE)
 #define task_is_blocked(t)  ((t)->state == TASK_BLOCKED)
 #define task_is_dead(t)     ((t)->state == TASK_DEAD)
-
 
 struct task *task_create(thread_fn_t fn, void *arg);
 struct task *task_create_with_buf(thread_fn_t fn, void **buf, size_t buf_len);

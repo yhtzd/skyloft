@@ -8,22 +8,25 @@ preempt_quantum=$3
 
 if [[ $app_name =~ synthetic-(.*) ]]; then
     params_file=$script_dir/params/shinjuku.params
-    build_cmd="make build SCHED=${BASH_REMATCH[1]} UINTR=1 DPDK=0 STAT=0"
+    build_cmd="make install SCHED=${BASH_REMATCH[1]} UINTR=1 DPDK=0"
 elif [[ $app_name =~ schbench-([a-zA-Z0-9]+).* ]]; then
     params_file=$script_dir/params/$app_name.params
-    build_cmd="make schbench SCHED=${BASH_REMATCH[1]} UINTR=1 DPDK=0 STAT=0"
+    build_cmd="make schbench SCHED=${BASH_REMATCH[1]} UINTR=1 DPDK=0"
 elif [ $app_name == "memcached" ]; then
     params_file=$script_dir/params/$app_name.params
-    build_cmd="make memcached SCHED=fifo UINTR=0 DPDK=1 STAT=0"
+    build_cmd="make memcached SCHED=fifo UINTR=0 DPDK=1"
 elif [[ $app_name =~ rocksdb-server-([a-zA-Z0-9]+) ]]; then
     params_file=$script_dir/params/$app_name.params
-    build_cmd="make rocksdb SCHED=fifo UINTR=1 DPDK=1 STAT=0"
+    build_cmd="make rocksdb SCHED=fifo UINTR=1 DPDK=1 FXSAVE=1"
+elif [[ $app_name =~ rocksdb-server-([a-zA-Z0-9]+)-utimer ]]; then
+    params_file=$script_dir/params/$app_name.params
+    build_cmd="make rocksdb SCHED=fifo UINTR=1 DPDK=1 FXSAVE=1"
 elif [ $app_name == "rocksdb-server" ]; then
     params_file=$script_dir/params/$app_name.params
-    build_cmd="make rocksdb SCHED=fifo UINTR=0 DPDK=1 STAT=0"
-elif [ $app_name == "bench_thread" ]; then
-    params_file=$script_dir/params/thread.params
-    build_cmd="make build SCHED=rr UINTR=0 DPDK=0 STAT=0"
+    build_cmd="make rocksdb SCHED=fifo UINTR=0 DPDK=1"
+elif [ $app_name == "microbench" ]; then
+    params_file=$script_dir/params/microbench.params
+    build_cmd="make microbench SCHED=rr UINTR=0 DPDK=0"
 fi
 
 # Generate parameters

@@ -1,0 +1,7 @@
+#define USED_CPUS        15
+#define IO_CPU           14
+#define USED_HW_CPU_LIST "1,2,3,4,5,6,7,8,9,10,11,12,13,14,22"
+
+#define UTIMER           1
+#define UTIMER_CPU       13
+#define TIMER_HZ         200000

@@ -9,7 +9,7 @@
 #include <utils/assert.h>
 #include <utils/atomic.h>
 #include <utils/defs.h>
-#include <utils/types.h>
+
 #include <utils/log.h>
 
 #define MSGQ_SIZE        4096

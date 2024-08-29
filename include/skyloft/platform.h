@@ -32,9 +32,15 @@ static inline int cpu_sibling(int cpu_id)
     return cpu_siblings[cpu_id];
 }
 
-static inline int cpu_numa_node(int cpu_id) { return numa_node_of_cpu(hw_cpu_id(cpu_id)); }
+static inline int cpu_numa_node(int cpu_id)
+{
+    return numa_node_of_cpu(hw_cpu_id(cpu_id));
+}
 
-static inline pid_t _gettid() { return syscall(SYS_gettid); }
+static inline pid_t _gettid()
+{
+    return syscall(SYS_gettid);
+}
 
 int bind_to_cpu(int tid, int cpu_id);
 int unbind_cpus(int tid);
@@ -63,7 +69,10 @@ physaddr_t mem_virt2phys(void *addr);
 
 /* Remote FD */
 
-static inline int pidfd_open(pid_t pid) { return syscall(SYS_pidfd_open, pid, 0); }
+static inline int pidfd_open(pid_t pid)
+{
+    return syscall(SYS_pidfd_open, pid, 0);
+}
 
 static inline int pidfd_getfd(int pidfd, int targetfd)
 {

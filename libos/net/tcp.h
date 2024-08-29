@@ -8,7 +8,6 @@
 #include <skyloft/tcp.h>
 #include <utils/defs.h>
 #include <utils/kref.h>
-#include <utils/types.h>
 
 #include "waitq.h"
 

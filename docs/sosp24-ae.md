@@ -4,6 +4,24 @@
 
 ### 1.1 Artifact Directory Layout
 
+- `apps/`: Benchmark real-world applications
+- `docs/`: Documents and images
+- `synthetic/`: Benchmark c-FCFS and PS scheduling policies
+    - `rocksdb/`: Latency-critical application
+    - `antagonist/`: Batch application
+- `kmod/`: Skyloft kernel module
+- `libos/`: Skyloft main code
+    - `io/`: IO thread
+    - `net/`: Network stack
+    - `shim/`: Shim layer for POSIX APIs
+    - `sync/`: Synchronization primitives
+    - `mm/`: Memory management
+    - `sched/`: Schedulers
+- `utils/`: Useful tools
+- `scripts/`: Setup machine; run experiments
+- `microbench/`: Microbenchmarks and prototypes
+
+
 ### 1.2 Main Experiments
 
 | Experiments        | Figure/Table              | Runtime | Description                                                                          |
@@ -12,7 +30,9 @@
 | synthetic-single   | Figure 6(a)               |         | Tail latency for a single synthetic latency-critical (LC) workload                   |
 | synthetic-multiple | Figure 6(b) & Figure 6(c) |         | Tail latency and CPU share for co-located synthetic LC and best-effort (BE) workload |
 | memcached          | Figure 7(a)               |         | Tail latency for a Memcached server                                                  |
+| rocksdb            | Figure 7(b)               |         | Tail latency for a rocksdb server                                                    |
 | preempt            | Table 5                   |         | Preemption mechanism overhead                                                        |
+| thread             | Table 6                   |         | Threading overhead                                                                   |
 
 ## 2. System Requirements
 
@@ -67,6 +87,8 @@ Other software dependencies are provided in our GitHub repositories, and install
 
 ## 3. Getting Started
 
+*You can skip 3.0 - 3.4 if you are using the environment provided by us.*
+
 **Following instructions are for the Server.**
 
 ### 3.0 Check Requirements
@@ -94,6 +116,8 @@ $ ./build.sh
 
 ### 3.3 Configure Kernel Commandline Parameters
 
+We will mention it again if the command line needs to change through experiments.
+
 Take GRUB as example:
 
 1. Open `/etc/default/grub`, add or modify the line:
@@ -120,26 +144,7 @@ Take GRUB as example:
    6.0.0-skyloft-nohzfull+
    ```
 
-### 3.4 Download Skyloft
-
-```sh
-$ git clone https://github.com/yhtzd/skyloft.git
-$ cd skyloft
-$ git submodule update --init --recursive
-```
-
-### 3.5 Setup Hosts
-
-Disable CPU frequency scaling so all cores are running at base clock, and setup hugepages:
-
-```sh
-$ cd skyloft/scripts
-$ ./install_deps.sh
-$ ./disable_cpufreq_scaling.sh -c 0-23
-$ sudo ./setup_host.sh
-```
-
-### 3.6 Install DPDK
+### 3.4 Install DPDK
 
 Install DPDK v22.11 on the machine:
 
@@ -150,6 +155,25 @@ $ meson build
 $ cd build
 $ ninja
 $ sudo meson install
+```
+
+### 3.5 Download Skyloft
+
+```sh
+$ git clone https://github.com/yhtzd/skyloft.git
+$ cd skyloft
+$ git submodule update --init --recursive
+```
+
+### 3.6 Setup Hosts
+
+Disable CPU frequency scaling so all cores are running at base clock, and setup hugepages:
+
+```sh
+$ cd skyloft/scripts
+$ ./install_deps.sh
+$ ./disable_cpufreq_scaling.sh -c 0-23
+$ sudo ./setup_host.sh
 ```
 
 And show the NIC status:
@@ -219,13 +243,21 @@ Each expriment needs different parameters, such as number of CPU cores, preempti
 
 ### 4.1 schbench
 
+Before running this experiment, remember to change the cmdline to:
+
+```config
+GRUB_CMDLINE_LINUX="isolcpus=0-23,48-71 nohz_full=0-23,48-71 intel_iommu=off nopat watchdog_thresh=0"
+```
+
+You can check it through `cat /proc/cmdline`.
+
 The `schbench` experiment shows `Skyloft`'s per-CPU scheduler performance, by comparing the 99% wakeup latency of the `schbench` schduler benchmarking tool. This experiment uses 24 CPU cores, running different number of worker threads, ranging from 8 to 96.
 
 The parameters of each build target are listed as follows:
 
-| Build Target         | Schedule Policy | Preemption Quantum |
-| -------------------- | --------------- | ------------------ |
-| schbench-cfs-50us    | CFS             | 50us               |
+| Build Target      | Schedule Policy | Preemption Quantum |
+| ----------------- | --------------- | ------------------ |
+| schbench-cfs-50us | CFS             | 50us               |
 | schbench-rr-50us  | RR              | 50us               |
 | schbench-rr-200us | RR              | 200us              |
 | schbench-rr-1ms   | RR              | 1ms                |
@@ -234,9 +266,9 @@ The parameters of each build target are listed as follows:
 To run this experiment, take `schbench-cfs-50us` as an example:
 
 ```sh
-cd skyloft
-./scripts/build.sh schbench-cfs-50us
-./scripts/bench/schbench.sh cfs-50us
+$ cd skyloft
+$ ./scripts/build.sh schbench-cfs-50us
+$ ./scripts/bench/schbench.sh cfs-50us
 ```
 
 The results are written into `results_24_cfs-50us` folder. Data from different number of worker threads are summarized in the `all.csv` file, and the output of each run are stored in `.txt` files.
@@ -244,15 +276,21 @@ The results are written into `results_24_cfs-50us` folder. Data from different n
 To plot the figures, move `all.csv` file to the `results/schbench/skyloft_cfs50us` directory (change this path according to the build target), then run the plot script:
 
 ```sh
-mv results_24_cfs-50us/all.csv results/schbench/skyloft_cfs50us/
-cd scripts/plots
-python3 plot_schbench.py
-python3 plot_schbench2.py
+$ mv results_24_cfs-50us/all.csv results/schbench/skyloft_cfs50us/
+$ cd scripts/plots
+$ python3 plot_schbench.py
+$ python3 plot_schbench2.py
 ```
 
 The figures are saved in `scripts/plots/schbench.pdf` and `scripts/plots/schbench2.pdf`, corresponding to the Figure 4 and Figure 5 in the paper.
 
 ### 4.2 synthetic-single
+
+Before running this and following experiments, remember to change the cmdline to:
+
+```config
+GRUB_CMDLINE_LINUX="isolcpus=0-21,48-69 nohz_full=0-21,48-69 intel_iommu=off nopat watchdog_thresh=0"
+```
 
 The `run_synthetic_lc.sh` script runs a single synthetic LC app (`shinjuku`), iterating over different target throughput, with the following parameters:
 
@@ -263,7 +301,7 @@ The `run_synthetic_lc.sh` script runs a single synthetic LC app (`shinjuku`), it
 
 ```sh
 $ cd skyloft/scripts
-$ ./build synthetic-sq
+$ ./build.sh synthetic-sq
 $ ./run_synthetic_lc.sh
 ```
 
@@ -288,7 +326,7 @@ The `run_synthetic_lcbe.sh` script runs both a LC app and a BE app (`antagonist`
 
 ```sh
 $ cd skyloft/scripts
-$ ./build synthetic-sq_lcbe
+$ ./build.sh synthetic-sq_lcbe
 $ ./run_synthetic_lcbe.sh
 ```
 
@@ -316,7 +354,7 @@ Build and run the Skyloft memcached on Server:
 
 ```sh
 $ cd skyloft/scripts
-$ ./build memcached
+$ ./build.sh memcached
 $ ./run.sh memcached -p 11211 -t 4 -u root
 ```
 
@@ -324,6 +362,7 @@ Run the Shenango client on Client:
 
 ```sh
 $ sudo ./iokerneld
+# in another shell
 $ numactl -N 0 -- \
    ./apps/synthetic/target/release/synthetic \
    10.3.3.3:11211 \
@@ -336,26 +375,59 @@ $ numactl -N 0 -- \
    --runtime 1000000000
 ```
 
+### 4.5 rocksdb
+
+Build and run on Server:
+
+```sh
+$ cd skyloft/scripts
+# you can run it with different configurations
+$ ./build.sh rocksdb-server-5us
+# ./build.sh rocksdb-server
+# ./build.sh rocksdb-server-20us
+# you can also run it with a timer simulated in user space
+# ./build.sh rocksdb-server-5us-utimer
+$ ./run.sh rocksdb_server 2333
+```
+
+Run the Shenango client on Client:
+
+```sh
+$ sudo ./iokerneld
+# in another shell
+$ numactl -N 0 -- \
+   ./apps/synthetic/target/release/synthetic \
+   10.3.3.3:2333 \
+   --config client.config \
+   --threads 16 \
+   --mode runtime-client \
+   --protocol synthetic \
+   --transport udp \
+   --runtime 5000000000 --slowdown --rampup 0 \
+   -d rocksdb \
+   --mean 1000 --samples 20 --start_mpps 0 --mpps 0.05
+```
+
 ### 4.6 preempt
 
 First, build benchmarks for various preemption mechanism:
 
 ```sh
-cd microbench
-make
+$ cd skyloft/scripts
+$ ./build.sh microbench
 ```
 
 Entries in Table 5 can be obtained by running the following commands:
 
-| Entries in Table 5   | Command |
-| ------------------ | ------- |
-| Signal Send/Recv   | `./signal_send_recv` |
-| Signal Delivery    | `./signal_delivery` |
-| User IPI Send/Recv | `./uipi_send_recv` |
-| User IPI Delivery  | `./uipi_delivery` |
-| `setitimer` Recv   | `./setitimer_recv` |
-| User timer interrupt Recv | `./utimer_recv` |
-| Kernel IPI Send/Recv | `./kipi_send_recv` |
+| Entries in Table 5        | Command              |
+| ------------------------- | -------------------- |
+| Signal Send/Recv          | `./signal_send_recv` |
+| Signal Delivery           | `./signal_delivery`  |
+| User IPI Send/Recv        | `./uipi_send_recv`   |
+| User IPI Delivery         | `./uipi_delivery`    |
+| `setitimer` Recv          | `./setitimer_recv`   |
+| User timer interrupt Recv | `./utimer_recv`      |
+| Kernel IPI Send/Recv      | `./kipi_send_recv`   |
 
 For the Kernel IPI benchmark, you need to get the output of the kernel module by `demsg`:
 
@@ -372,6 +444,16 @@ $ sudo dmesg
 ```
 
 The send time is `437` cycles, and the receive time is `4370647834 / 2761085 = 1582` cycles.
+
+### 4.7 thread
+
+Build and run benchmarks for threading microbenchmarks:
+
+```sh
+$ cd skyloft/scripts
+$ ./build.sh microbench
+$ ./run.sh thread
+```
 
 ## 5. Related Work
 

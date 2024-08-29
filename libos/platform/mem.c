@@ -23,7 +23,10 @@ long mbind(void *start, size_t len, int mode, const unsigned long *nmask, unsign
     return syscall(__NR_mbind, start, len, mode, nmask, maxnode, flags);
 }
 
-static void sigbus_error(int sig) { panic("couldn't map pages"); }
+static void sigbus_error(int sig)
+{
+    panic("couldn't map pages");
+}
 
 void touch_mapping(void *base, size_t len, size_t pgsize)
 {

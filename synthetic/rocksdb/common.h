@@ -69,7 +69,10 @@ static inline double max_throughput()
     return USEC_PER_SEC / mean_service_time_us() * FLAGS_num_workers;
 }
 
-static inline double target_throughput() { return max_throughput() * FLAGS_load; }
+static inline double target_throughput()
+{
+    return max_throughput() * FLAGS_load;
+}
 
 void write_lat_results_detailed(int issued, request_t *reqs);
 void write_lat_results(int issued, request_t *reqs);

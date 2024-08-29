@@ -5,3 +5,5 @@ signal_send_recv
 signal_delivery
 setitimer_recv
 kipi_send_recv
+fxsave
+thread

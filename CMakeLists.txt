@@ -8,11 +8,6 @@ endif()
 
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O3 -Wall -Wextra -Wno-unused-parameter")
-if (DPDK)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-elseif (SCHED_POLICY MATCHES "^(fifo|rr|cfs)$")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mno-sse")
-endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wextra -Wall")
@@ -52,6 +47,10 @@ if(UINTR)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -muintr")
 endif()
 
+if(FXSAVE)
+    add_definitions(-DSKYLOFT_FXSAVE)
+endif()
+
 if(LOG_LEVEL)
     if(NOT LOG_LEVEL MATCHES "^(debug|info|notice|warn|err|crit)$")
         message(FATAL_ERROR "Invalid log level: ${LOG_LEVEL}")
@@ -60,7 +59,6 @@ if(LOG_LEVEL)
     string(TOUPPER ${LOG_LEVEL} LOG_LEVEL_UPPER)
     add_definitions(-DLOG_LEVEL_${LOG_LEVEL_UPPER})
 endif()
-
 message(STATUS "Log level: ${LOG_LEVEL}")
 
 if(NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
@@ -91,3 +89,9 @@ else()
     add_subdirectory(apps)
 endif()
 
+add_custom_target(
+    microbench
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/microbench
+    COMMAND make clean && make SKYLOFT_DIR=${CMAKE_CURRENT_BINARY_DIR}/install
+    COMMAND ln -sf ${CMAKE_CURRENT_SOURCE_DIR}/microbench/thread ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/thread
+)

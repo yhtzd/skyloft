@@ -1,0 +1,40 @@
+Wakeup Latencies percentiles (usec) runtime 10 (s) (94786 total samples)
+	  50.0th: 2244       (28470 samples)
+	  90.0th: 11280      (37874 samples)
+	* 99.0th: 24160      (8502 samples)
+	  99.9th: 63552      (851 samples)
+	  min=1, max=87639
+Request Latencies percentiles (usec) runtime 10 (s) (94708 total samples)
+	  50.0th: 7096       (29524 samples)
+	  90.0th: 14320      (36093 samples)
+	* 99.0th: 30688      (8502 samples)
+	  99.9th: 66944      (847 samples)
+	  min=2428, max=89979
+RPS percentiles (requests) runtime 10 (s) (11 total samples)
+	  20.0th: 9392       (4 samples)
+	* 50.0th: 9424       (3 samples)
+	  90.0th: 9456       (3 samples)
+	  min=9388, max=9637
+current rps: 9418
+Wakeup Latencies percentiles (usec) runtime 10 (s) (94863 total samples)
+	  50.0th: 2244       (28474 samples)
+	  90.0th: 11280      (37915 samples)
+	* 99.0th: 24160      (8527 samples)
+	  99.9th: 63552      (851 samples)
+	  min=1, max=87639
+Request Latencies percentiles (usec) runtime 10 (s) (94873 total samples)
+	  50.0th: 7096       (29557 samples)
+	  90.0th: 14320      (36166 samples)
+	* 99.0th: 30688      (8528 samples)
+	  99.9th: 66944      (847 samples)
+	  min=2428, max=89979
+RPS percentiles (requests) runtime 10 (s) (11 total samples)
+	  20.0th: 9392       (4 samples)
+	* 50.0th: 9424       (3 samples)
+	  90.0th: 9456       (3 samples)
+	  min=9388, max=9637
+average rps: 9487
+message_threads 1
+worker_threads 160
+operations 10
+matrix_size 73

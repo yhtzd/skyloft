@@ -110,7 +110,10 @@ pthread_t sl_pthread_self()
     return align_down(stack_top(task_self()->stack) - sizeof(struct join_handle), RSP_ALIGNMENT);
 }
 
-void __attribute__((noreturn)) sl_pthread_exit(void *retval) { task_exit(retval); }
+void __attribute__((noreturn)) sl_pthread_exit(void *retval)
+{
+    task_exit(retval);
+}
 
 int sl_pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *mutexattr)
 {
@@ -135,7 +138,10 @@ int sl_pthread_mutex_unlock(pthread_mutex_t *mutex)
     return 0;
 }
 
-int sl_pthread_mutex_destroy(pthread_mutex_t *mutex) { return 0; }
+int sl_pthread_mutex_destroy(pthread_mutex_t *mutex)
+{
+    return 0;
+}
 
 int sl_pthread_cond_init(pthread_cond_t *__restrict cond,
                          const pthread_condattr_t *__restrict cond_attr)
@@ -162,4 +168,7 @@ int sl_pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
     return 0;
 }
 
-int sl_pthread_cond_destroy(pthread_cond_t *cond) { return 0; }
+int sl_pthread_cond_destroy(pthread_cond_t *cond)
+{
+    return 0;
+}

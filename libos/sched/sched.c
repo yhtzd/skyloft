@@ -109,7 +109,11 @@ static __always_inline void fast_schedule()
 
     /* switch stacks and enter the next task */
     __curr = next;
-    __context_switch(&prev->rsp, next->rsp, &prev->stack_busy);
+    if (next->init) {
+        next->init = false;
+        __context_switch_init(&prev->rsp, next->rsp, &prev->stack_busy);
+    } else
+        __context_switch(&prev->rsp, next->rsp, &prev->stack_busy);
 }
 
 /**
@@ -152,7 +156,7 @@ again:
         /* optional load balance */
         __sched_balance();
 #ifdef SKYLOFT_SCHED_CFS
-    __sched_percpu_lock(g_logic_cpu_id);
+        __sched_percpu_lock(g_logic_cpu_id);
 #endif
 #endif
         goto again;
@@ -187,7 +191,11 @@ done:
 
     /* switch stacks and enter the next task */
     __curr = next;
-    __context_switch_from_idle(next->rsp);
+    if (next->init) {
+        next->init = false;
+        __context_switch_from_idle_init(next->rsp);
+    } else
+        __context_switch_from_idle(next->rsp);
 }
 
 __noreturn void start_schedule(void)
@@ -392,13 +400,25 @@ __noreturn void task_exit(void *code)
 
 /* API implementations */
 
-const char *__api sl_sched_policy_name() { return __sched_name; }
+const char *__api sl_sched_policy_name()
+{
+    return __sched_name;
+}
 
-int __api sl_current_task_id() { return -1; }
+int __api sl_current_task_id()
+{
+    return __curr->id;
+}
 
-int __api sl_sched_set_params(void *params) { return __sched_set_params(params); }
+int __api sl_sched_set_params(void *params)
+{
+    return __sched_set_params(params);
+}
 
-void __api sl_sched_poll() { __sched_poll(); }
+void __api sl_sched_poll()
+{
+    __sched_poll();
+}
 
 int __api sl_task_spawn(thread_fn_t fn, void *arg, int stack_size)
 {
@@ -410,11 +430,20 @@ int __api sl_task_spawn_oncpu(int cpu_id, thread_fn_t fn, void *arg, int stack_s
     return task_spawn(cpu_id, fn, arg, stack_size);
 }
 
-void __api sl_task_yield() { task_yield(); }
+void __api sl_task_yield()
+{
+    task_yield();
+}
 
-__noreturn void __api sl_task_exit(void *code) { task_exit(code); }
+__noreturn void __api sl_task_exit(void *code)
+{
+    task_exit(code);
+}
 
-void __api sl_dump_tasks() { __sched_dump_tasks(); }
+void __api sl_dump_tasks()
+{
+    __sched_dump_tasks();
+}
 
 #ifdef SKYLOFT_UINTR
 
@@ -422,11 +451,10 @@ void __attribute__((target("general-regs-only"))) __attribute__((interrupt))
 uintr_handler(struct __uintr_frame *ui_frame, unsigned long long vector)
 {
     /* reset UPID.PIR */
-#ifdef SCHED_PERCPU
+#if defined(SCHED_PERCPU) && !defined(UTIMER)
     _senduipi(uintr_index());
 #endif
     ADD_STAT(UINTR, 1);
-    // softirq_run(SOFTIRQ_MAX_BUDGET);
     /* check if rescheduling needed */
     if (__sched_preempt()) {
         if (preempt_enabled() && __curr->allow_preempt) {

@@ -7,7 +7,7 @@
 #pragma once
 
 #include <utils/defs.h>
-#include <utils/types.h>
+
 
 #define ETH_ADDR_LEN      6
 #define ETH_TYPE_LEN      2

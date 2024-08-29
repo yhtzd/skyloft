@@ -96,7 +96,7 @@ int str_to_mac(const char *str, struct eth_addr *addr);
  * I/O thread
  */
 
-struct iothread_t {
+struct iothread {
     /* dpdk port id */
     int port_id;
     /* dpdk rx memory pool */
@@ -112,7 +112,7 @@ struct iothread_t {
     struct eth_addr mac;
 };
 
-extern struct iothread_t *io;
+extern struct iothread *io;
 extern physaddr_t* page_paddrs;
 
 int iothread_init(void);

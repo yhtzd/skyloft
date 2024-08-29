@@ -245,7 +245,10 @@ try_again:
     return true;
 }
 
-static void timer_finish_sleep(unsigned long arg) { task_wakeup((struct task *)arg); }
+static void timer_finish_sleep(unsigned long arg)
+{
+    task_wakeup((struct task *)arg);
+}
 
 static void __timer_sleep(uint64_t deadline_us)
 {
@@ -281,11 +284,20 @@ void timer_sleep_until(uint64_t deadline_us)
  * timer_sleep - sleeps for a duration
  * @duration_us: the duration time in microseconds
  */
-void timer_sleep(uint64_t duration_us) { __timer_sleep(now_us() + duration_us); }
+void timer_sleep(uint64_t duration_us)
+{
+    __timer_sleep(now_us() + duration_us);
+}
 
-void __api sl_sleep(int secs) { return timer_sleep(secs * USEC_PER_SEC); }
+void __api sl_sleep(int secs)
+{
+    return timer_sleep(secs * USEC_PER_SEC);
+}
 
-void __api sl_usleep(int usecs) { return timer_sleep(usecs); }
+void __api sl_usleep(int usecs)
+{
+    return timer_sleep(usecs);
+}
 
 /**
  * timer_softirq - handles expired timers

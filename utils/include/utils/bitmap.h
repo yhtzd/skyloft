@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <string.h>
 #include <assert.h>
+#include <string.h>
 
 #include <utils/atomic.h>
 #include <utils/defs.h>

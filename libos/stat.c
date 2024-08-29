@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#include <utils/log.h>
-#include <utils/defs.h>
 #include <skyloft/io.h>
 #include <skyloft/stat.h>
+#include <utils/defs.h>
+#include <utils/log.h>
 
 void print_stats(void)
 {

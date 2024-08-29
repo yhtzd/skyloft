@@ -13,7 +13,7 @@
 #include <utils/atomic.h>
 #include <utils/defs.h>
 #include <utils/list.h>
-#include <utils/types.h>
+
 
 #define MBUF_DEFAULT_LEN      2048
 #define MBUF_DEFAULT_HEADROOM 128

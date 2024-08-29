@@ -6,7 +6,6 @@
 
 #include <utils/assert.h>
 #include <utils/ops.h>
-#include <utils/types.h>
 
 typedef struct {
     volatile int locked;

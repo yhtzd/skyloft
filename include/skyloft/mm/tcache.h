@@ -10,7 +10,7 @@
 #include <utils/list.h>
 #include <utils/log.h>
 #include <utils/spinlock.h>
-#include <utils/types.h>
+
 
 #define TCACHE_MAX_MAG_SIZE     64
 #define TCACHE_DEFAULT_MAG_SIZE 8

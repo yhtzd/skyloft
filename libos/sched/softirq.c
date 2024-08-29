@@ -14,7 +14,6 @@
 #include <utils/defs.h>
 #include <utils/log.h>
 #include <utils/lrpc.h>
-#include <utils/types.h>
 
 struct softirq_work {
     /* packets received  */

@@ -31,13 +31,25 @@ typedef struct {
     void *buf[QUEUE_CAP];
 } queue_t;
 
-static inline int queue_len(queue_t *queue) { return queue->tail - queue->head; }
+static inline int queue_len(queue_t *queue)
+{
+    return queue->tail - queue->head;
+}
 
-static inline bool queue_is_empty(queue_t *queue) { return queue_len(queue) == 0; }
+static inline bool queue_is_empty(queue_t *queue)
+{
+    return queue_len(queue) == 0;
+}
 
-static inline bool queue_is_full(queue_t *queue) { return queue_len(queue) >= QUEUE_CAP; }
+static inline bool queue_is_full(queue_t *queue)
+{
+    return queue_len(queue) >= QUEUE_CAP;
+}
 
-static inline void *queue_head(queue_t *queue) { return queue->buf[queue->head & QUEUE_CAP_MASK]; }
+static inline void *queue_head(queue_t *queue)
+{
+    return queue->buf[queue->head & QUEUE_CAP_MASK];
+}
 
 static inline int queue_push(queue_t *queue, void *item)
 {

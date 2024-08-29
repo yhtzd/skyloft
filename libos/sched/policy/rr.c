@@ -65,7 +65,10 @@ int fifo_sched_spawn(struct task *task, int cpu)
     return 0;
 }
 
-void fifo_sched_yield() { put_task(this_rq(), task_self()); }
+void fifo_sched_yield()
+{
+    put_task(this_rq(), task_self());
+}
 
 void fifo_sched_wakeup(struct task *task)
 {

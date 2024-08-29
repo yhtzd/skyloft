@@ -1,7 +1,7 @@
 #pragma once
 
-#include <unistd.h>
 #include <sys/syscall.h>
+#include <unistd.h>
 
 static inline pid_t _gettid()
 {

@@ -33,7 +33,7 @@
 #pragma once
 
 #include <utils/defs.h>
-#include <utils/types.h>
+
 
 /*
  * Interface Control Message Protocol Definitions.

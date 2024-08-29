@@ -9,7 +9,7 @@
 #include <skyloft/sched.h>
 #include <utils/list.h>
 #include <utils/spinlock.h>
-#include <utils/types.h>
+
 
 /* forward declarations */
 struct slab_hdr;

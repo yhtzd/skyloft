@@ -5,15 +5,25 @@ UINTR ?= 0
 SCHED ?= fifo
 DAEMON ?=
 DEBUG ?=
-STAT ?=
+STAT ?= 0
 LOG ?= info
+FXSAVE ?= 0
 
 CC ?= gcc
 CFLAGS := -Wall -O2 -D_GNU_SOURCE
 CMAKE_ARGS ?=
 
 CMAKE_ARGS += -DSCHED_POLICY=$(SCHED)
-CMAKE_ARGS += -DSIGNAL=$(SIGNAL) -DDPDK=$(DPDK) -DTIMER=$(TIMER) -DUINTR=$(UINTR) -DDAEMON=$(DAEMON) -DDEBUG=$(DEBUG) -DSTAT=$(STAT) -DLOG_LEVEL=$(LOG)
+CMAKE_ARGS += \
+	-DSIGNAL=$(SIGNAL) \
+	-DDPDK=$(DPDK) \
+	-DTIMER=$(TIMER) \
+	-DUINTR=$(UINTR) \
+	-DDAEMON=$(DAEMON) \
+	-DDEBUG=$(DEBUG) \
+	-DSTAT=$(STAT) \
+	-DLOG_LEVEL=$(LOG) \
+	-DFXSAVE=$(FXSAVE)
 CMAKE_ARGS += -DCMAKE_INSTALL_PREFIX=install
 
 all: build
@@ -46,8 +56,11 @@ schbench: install
 rocksdb: install
 	cd build && make rocksdb_server VERBOSE=1
 
+microbench: install
+	cd build && make microbench VERBOSE=1
+
 fmt:
-	@clang-format --style=file -i $(shell find utils/ libos/ apps/ tests/ experiments/ -iname '*.c' -o -iname '*.cc' -o -iname '*.h')
+	@clang-format --style=file -i $(shell find utils/ libos/ apps/ synthetic/ -iname '*.c' -o -iname '*.cc' -o -iname '*.h')
 
 clean:
 	make -C build clean

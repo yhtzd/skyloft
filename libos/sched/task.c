@@ -1,4 +1,3 @@
-#include "skyloft/sched.h"
 #include <errno.h>
 
 #include <skyloft/mm.h>
@@ -10,6 +9,7 @@
 #include <utils/assert.h>
 #include <utils/atomic.h>
 #include <utils/defs.h>
+#include <utils/fxsave.h>
 #include <utils/log.h>
 #include <utils/spinlock.h>
 
@@ -25,6 +25,7 @@ static __always_inline void __task_init(struct task *t, struct stack *s)
     t->state = TASK_RUNNABLE;
     t->allow_preempt = false;
     t->skip_free = false;
+    t->init = true;
 #if DEBUG
     t->id = atomic_inc(&task_id_allocator);
 #endif
@@ -157,7 +158,10 @@ static __always_inline int __task_alloc_init(void *base)
     return 0;
 }
 
-static __always_inline int __task_alloc_init_percpu() { return 0; }
+static __always_inline int __task_alloc_init_percpu()
+{
+    return 0;
+}
 
 #endif
 
@@ -165,7 +169,7 @@ struct task *task_create(thread_fn_t fn, void *arg)
 {
     uint64_t *rsp;
     struct task *task;
-    struct switch_frame *frame;
+    struct callee_saved *frame;
 
     task = __task_create(false);
     if (unlikely(!task))
@@ -173,7 +177,7 @@ struct task *task_create(thread_fn_t fn, void *arg)
 
     rsp = (uint64_t *)stack_top(task->stack);
     *--rsp = (uint64_t)task_exit;
-    frame = (struct switch_frame *)rsp - 1;
+    frame = (struct callee_saved *)rsp - 1;
     frame->rip = (uint64_t)fn;
     frame->rdi = (uint64_t)arg;
     frame->rbp = 0;
@@ -186,7 +190,7 @@ struct task *task_create_with_buf(thread_fn_t fn, void **buf, size_t buf_len)
 {
 
     uint64_t rsp, *ptr;
-    struct switch_frame *frame;
+    struct callee_saved *frame;
 
     struct task *task = __task_create(false);
     if (unlikely(!task))
@@ -196,9 +200,10 @@ struct task *task_create_with_buf(thread_fn_t fn, void **buf, size_t buf_len)
     rsp -= buf_len;
     rsp = align_down(rsp, RSP_ALIGNMENT);
     *buf = (void *)rsp;
+
     ptr = (uint64_t *)rsp;
     *--ptr = (uint64_t)task_exit;
-    frame = (struct switch_frame *)ptr - 1;
+    frame = (struct callee_saved *)ptr - 1;
     frame->rip = (uint64_t)fn;
     frame->rdi = (uint64_t)*buf;
     frame->rbp = 0;
@@ -229,7 +234,10 @@ void task_free(struct task *t)
     log_debug("%s %p %p %d", __func__, t, t->stack, t->id);
 }
 
-int sched_task_init_percpu() { return __task_alloc_init_percpu(); }
+int sched_task_init_percpu()
+{
+    return __task_alloc_init_percpu();
+}
 
 int sched_task_init(void *base)
 {

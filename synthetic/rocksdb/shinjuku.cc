@@ -15,7 +15,6 @@
 #include <utils/log.h>
 #include <utils/spinlock.h>
 #include <utils/time.h>
-#include <utils/types.h>
 
 #include "common.h"
 #include "random.h"

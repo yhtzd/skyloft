@@ -15,15 +15,14 @@
  */
 struct mbuf *mbuf_clone(struct mbuf *dst, struct mbuf *src)
 {
-	/* copy the backing buffer */
-	dst->data = dst->head + mbuf_headroom(src);
-	memcpy(mbuf_put(dst, mbuf_length(src)),
-	       mbuf_data(src), mbuf_length(src));
+    /* copy the backing buffer */
+    dst->data = dst->head + mbuf_headroom(src);
+    memcpy(mbuf_put(dst, mbuf_length(src)), mbuf_data(src), mbuf_length(src));
 
-	/* copy packet metadata */
-	dst->csum_type = src->csum_type;
-	dst->csum = src->csum;
-	dst->txflags = src->txflags; /* NOTE: this is a union */
+    /* copy packet metadata */
+    dst->csum_type = src->csum_type;
+    dst->csum = src->csum;
+    dst->txflags = src->txflags; /* NOTE: this is a union */
 
-	return dst;
+    return dst;
 }

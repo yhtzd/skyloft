@@ -4,9 +4,9 @@
 
 #include <stdio.h>
 
-#include <skyloft/task.h>
 #include <skyloft/sync/sync.h>
 #include <skyloft/sync/timer.h>
+#include <skyloft/task.h>
 #include <skyloft/uapi/task.h>
 #include <utils/defs.h>
 #include <utils/log.h>

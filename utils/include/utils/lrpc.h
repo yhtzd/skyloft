@@ -11,7 +11,6 @@
 #include <utils/assert.h>
 #include <utils/atomic.h>
 #include <utils/defs.h>
-#include <utils/types.h>
 
 struct lrpc_msg {
     uint64_t cmd;

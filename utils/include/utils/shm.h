@@ -7,7 +7,6 @@
 #include <limits.h>
 
 #include <utils/assert.h>
-#include <utils/types.h>
 
 /*
  * Shared memory pointer support. These are pointers that are passed across

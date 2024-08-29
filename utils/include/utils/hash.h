@@ -13,7 +13,6 @@
 
 #include <utils/ops.h>
 #include <utils/time.h>
-#include <utils/types.h>
 
 static inline uint64_t __mm_crc32_u64(uint64_t crc, uint64_t val)
 {

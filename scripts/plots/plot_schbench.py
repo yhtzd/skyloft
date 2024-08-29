@@ -14,24 +14,28 @@ args = parser.parse_args()
 FNAMES = [
     "linux_rr",
     "linux_cfs",
+    "linux_cfs_opt",
     "skyloft_rr50us",
     "skyloft_cfs50us",
 ]
 LABELS = [
     "Linux-RR",
     "Linux-CFS",
+    "Linux-CFS-opt",
     "Skyloft-RR",
     "Skyloft-CFS",
 ]
 MARKERS = [
     ".:",
     "+--",
+    "*--",
     "x-",
     "o-",
 ]
 COLORS = [
     COLORS(0),
     COLORS(4),
+    COLORS(2),
     COLORS(1),
     COLORS(3),
 ]
@@ -90,6 +94,7 @@ def plot(data=None, output=None):
     plt.legend(handles, labels, loc='lower right',
         bbox_to_anchor=(1, -0.03),
         ncol=1,
+        fontsize=8,
         frameon=False,
         handlelength=2.5,
     )

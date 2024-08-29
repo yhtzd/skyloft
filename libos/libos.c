@@ -14,10 +14,12 @@
 #include <skyloft/percpu.h>
 #include <skyloft/platform.h>
 #include <skyloft/sched.h>
+#include <skyloft/sched/utimer.h>
 #include <skyloft/sync.h>
 #include <skyloft/task.h>
 #include <skyloft/uapi/dev.h>
 #include <skyloft/uapi/task.h>
+
 #include <utils/init.h>
 #include <utils/log.h>
 #include <utils/spinlock.h>
@@ -107,11 +109,14 @@ int proc_init()
     proc->pid = getpid();
     proc->exited = false;
     proc->ready = false;
-#ifdef SKYLOFT_DPDK
-    proc->nr_ks = USED_CPUS - 1;
-#else
     proc->nr_ks = USED_CPUS;
+#ifdef SKYLOFT_DPDK
+    proc->nr_ks--;
 #endif
+#ifdef UTIMER
+    proc->nr_ks--;
+#endif
+log_debug("nr_ks=%d", proc->nr_ks);
     for (i = 0; i < USED_CPUS; i++) {
         struct kthread *k = &proc->all_ks[i];
 
@@ -134,8 +139,8 @@ int cpubind_init_percpu(void)
         BUG_ON(skyloft_park_on_cpu(g_logic_cpu_id));
     }
 
-    log_info("CPU %d(%d): node = %d, tid = %d %p", g_logic_cpu_id, hw_cpu_id(g_logic_cpu_id),
-             thisk()->node, _gettid(), localk);
+    log_info("CPU %d(%d): node = %d, tid = %d %p %p", g_logic_cpu_id, hw_cpu_id(g_logic_cpu_id),
+             thisk()->node, _gettid(), localk, &localk);
 
     return 0;
 }
@@ -202,6 +207,11 @@ static __noreturn void *percpu_entry(void *arg)
     thread_init_done = true;
     atomic_fetch_add(&all_init_done, 1);
     while (atomic_load(&all_init_done) < USED_CPUS);
+#endif
+
+#ifdef UTIMER
+    if (cpu_id == UTIMER_CPU)
+        utimer_main();
 #endif
 
 #ifdef SKYLOFT_DPDK

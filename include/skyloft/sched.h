@@ -38,8 +38,11 @@ __noreturn void task_exit(void *code);
 
 /* assembly helper routines from switch.S */
 extern void __context_switch(uint64_t *prev_stack, uint64_t next_stack, uint8_t *prev_stack_busy);
+extern void __context_switch_init(uint64_t *prev_stack, uint64_t next_stack,
+                                  uint8_t *prev_stack_busy);
 extern void __context_switch_to_idle(uint64_t *prev_stack, uint64_t idle_stack);
 extern void __context_switch_from_idle(uint64_t next_stack);
+extern void __context_switch_from_idle_init(uint64_t next_stack);
 extern void __context_switch_to_fn_nosave(void (*fn)(void), uint64_t idle_stack);
 
 struct kthread {
@@ -56,8 +59,12 @@ struct kthread {
     int node;
     /* kernel thread states */
     bool parked;
-    /* RCU generation number */
+#if defined(UTIMER)
+    int uintr_fd;
+    uint8_t pad0[24];
+#else
     uint8_t pad0[28];
+#endif
 
     /* 2nd cacheline */
     struct mbufq txpktq_overflow;
@@ -80,6 +87,7 @@ struct kthread {
     /* 7th cacheline */
     /* statistics counters */
     uint64_t stats[STAT_NR];
+
 } __aligned_cacheline;
 
 BUILD_ASSERT(offsetof(struct kthread, txpktq_overflow) == 64);
@@ -131,14 +139,20 @@ static __always_inline struct task *task_self()
  *
  * Can be nested.
  */
-static __always_inline void preempt_disable(void) { preempt_cnt++; }
+static __always_inline void preempt_disable(void)
+{
+    preempt_cnt++;
+}
 
 /**
  * preempt_enable - reenables preemption
  *
  * Can be nested.
  */
-static __always_inline void preempt_enable(void) { preempt_cnt--; }
+static __always_inline void preempt_enable(void)
+{
+    preempt_cnt--;
+}
 
 /**
  * preempt_enabled - returns true if preemption is enabled
@@ -162,7 +176,10 @@ static __always_inline __attribute__((target("general-regs-only"))) struct kthre
 /**
  * cpuk - returns the per-kernel-thread data of the cpu
  */
-static inline struct kthread *cpuk(int cpu_id) { return &proc->all_ks[cpu_id]; }
+static inline struct kthread *cpuk(int cpu_id)
+{
+    return &proc->all_ks[cpu_id];
+}
 
 /**
  * getk - returns the per-kernel-thread data and disables preemption
@@ -179,14 +196,32 @@ static __always_inline struct kthread *getk(void)
 /**
  * putk - reenables preemption after calling getk()
  */
-static __always_inline void putk(void) { preempt_enable(); }
+static __always_inline void putk(void)
+{
+    preempt_enable();
+}
 
-static inline int current_app_id() { return proc->id; }
+static inline int current_app_id()
+{
+    return proc->id;
+}
 
-static inline int current_cpu_id() { return thisk()->cpu; }
+static inline int current_cpu_id()
+{
+    return thisk()->cpu;
+}
 
-static inline struct proc *current_app() { return &shm_apps[current_app_id()]; }
+static inline struct proc *current_app()
+{
+    return &shm_apps[current_app_id()];
+}
 
-static inline bool is_daemon() { return current_app_id() == DAEMON_APP_ID; }
+static inline bool is_daemon()
+{
+    return current_app_id() == DAEMON_APP_ID;
+}
 
-static inline int current_numa_node() { return thisk()->node; }
+static inline int current_numa_node()
+{
+    return thisk()->node;
+}

@@ -5,7 +5,7 @@
 #pragma once
 
 #include <skyloft/sched.h>
-#include <utils/types.h>
+
 
 typedef void (*timer_fn_t)(uint64_t arg);
 

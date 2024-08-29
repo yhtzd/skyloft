@@ -59,9 +59,15 @@ int fifo_sched_spawn(struct task *task, int cpu)
     return 0;
 }
 
-void fifo_sched_yield() { put_task(this_rq(), task_self()); }
+void fifo_sched_yield()
+{
+    put_task(this_rq(), task_self());
+}
 
-void fifo_sched_wakeup(struct task *task) { put_task(this_rq(), task); }
+void fifo_sched_wakeup(struct task *task)
+{
+    put_task(this_rq(), task);
+}
 
 static bool steal_task(struct fifo_rq *l, struct fifo_rq *r)
 {
@@ -106,6 +112,14 @@ done:
     return task != NULL;
 }
 
+#if defined(SKYLOFT_DPDK) && defined(UTIMER)
+#define WORKER_CPUS (USED_CPUS - 2)
+#elif !defined(SKYLOFT_DPDK) && !defined(UTIMER)
+#define WORKER_CPUS (USED_CPUS)
+#else
+#define WORKER_CPUS (USED_CPUS - 1)
+#endif
+
 void fifo_sched_balance()
 {
     int cpu = current_cpu_id();
@@ -124,8 +138,8 @@ void fifo_sched_balance()
 
     /* try to steal from every kthread */
     start_idx = rand_crc32c((uintptr_t)l);
-    for (i = 0; i < USED_CPUS - 1; i++) {
-        idx = (start_idx + i) % (USED_CPUS - 1);
+    for (i = 0; i < WORKER_CPUS; i++) {
+        idx = (start_idx + i) % WORKER_CPUS;
         if (idx != cpu && steal_task(l, cpu_rq(idx)))
             return;
     }

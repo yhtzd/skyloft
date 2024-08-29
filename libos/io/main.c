@@ -19,7 +19,7 @@
 
 #define LOG_INTERVAL_US (3000 * 1000)
 
-struct iothread_t *io;
+struct iothread *io;
 physaddr_t *page_paddrs;
 
 int str_to_ip(const char *str, uint32_t *addr)
@@ -83,7 +83,7 @@ int iothread_init(void)
     struct kthread *k;
     char *ptr;
 
-    io = (struct iothread_t *)malloc(sizeof(struct iothread_t));
+    io = (struct iothread *)malloc(sizeof(struct iothread));
 
     /* default configurations */
     str_to_ip(IO_ADDR, &io->addr);
