@@ -34,7 +34,7 @@
 
 #define SOFTIRQ_MAX_BUDGET       16
 #define RUNTIME_RQ_SIZE          32
-#define RUNTIME_STACK_SIZE       (16 * 1024)
+#define RUNTIME_STACK_SIZE       (64 * 1024)
 #define RUNTIME_LARGE_STACK_SIZE (256 * 1024)
 
 #define POLICY_TASK_DATA_SIZE (2 * 64)
