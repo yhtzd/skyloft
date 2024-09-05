@@ -8,6 +8,11 @@ endif()
 
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O3 -Wall -Wextra -Wno-unused-parameter")
+if (DPDK)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+elseif (SCHED_POLICY MATCHES "^(fifo|rr|cfs)$")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mno-sse")
+endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wextra -Wall")
