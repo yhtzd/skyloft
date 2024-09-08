@@ -30,8 +30,8 @@
  * subtraction to return the pointer to the enclosing type.
  */
 #ifndef container_of
-#define container_of(member_ptr, containing_type, member)                          \
-    ((containing_type *)((char *)(member_ptr)-offsetof(containing_type, member)) + \
+#define container_of(member_ptr, containing_type, member)                            \
+    ((containing_type *)((char *)(member_ptr) - offsetof(containing_type, member)) + \
      check_types_match(*(member_ptr), ((containing_type *)0)->member))
 #endif
 
@@ -80,7 +80,7 @@
  *
  * Returns true if the integer is a power of two.
  */
-#define is_power_of_two(x) ((x) != 0 && !((x) & ((x)-1)))
+#define is_power_of_two(x) ((x) != 0 && !((x) & ((x) - 1)))
 
 /**
  * align_up - rounds a value up to an alignment
@@ -89,10 +89,10 @@
  *
  * Returns an aligned value.
  */
-#define align_up(x, align)                      \
-    ({                                          \
-        assert(is_power_of_two(align));         \
-        (((x)-1) | ((typeof(x))(align)-1)) + 1; \
+#define align_up(x, align)                          \
+    ({                                              \
+        assert(is_power_of_two(align));             \
+        (((x) - 1) | ((typeof(x))(align) - 1)) + 1; \
     })
 
 /**
@@ -102,10 +102,10 @@
  *
  * Returns an aligned value.
  */
-#define align_down(x, align)             \
-    ({                                   \
-        assert(is_power_of_two(align));  \
-        ((x) & ~((typeof(x))(align)-1)); \
+#define align_down(x, align)               \
+    ({                                     \
+        assert(is_power_of_two(align));    \
+        ((x) & ~((typeof(x))(align) - 1)); \
     })
 
 /**
@@ -115,7 +115,7 @@
  *
  * Returns true if the value is aligned.
  */
-#define is_aligned(x, align) (((x) & ((typeof(x))(align)-1)) == 0)
+#define is_aligned(x, align) (((x) & ((typeof(x))(align) - 1)) == 0)
 
 /**
  * div_up - divides two numbers, rounding up to an integer
@@ -124,7 +124,7 @@
  *
  * Returns a rounded-up quotient.
  */
-#define div_up(x, d) ((((x) + (d)-1)) / (d))
+#define div_up(x, d) ((((x) + (d) - 1)) / (d))
 
 /**
  * Define an array of per-cpu variables, make the array size a multiple of
@@ -333,7 +333,7 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
 
 #define CACHE_LINE_SIZE 64
 
-/* multiply u64 with u32  */
+/* multiply uint64_t with uint32_t  */
 static inline uint64_t mul_u64_u32_shr(uint64_t a, uint32_t mul, unsigned int shift)
 {
     uint32_t ah, al;
@@ -348,3 +348,109 @@ static inline uint64_t mul_u64_u32_shr(uint64_t a, uint32_t mul, unsigned int sh
 
     return ret;
 }
+
+#define div64_long(x, y) div64_s64((x), (y))
+#define div64_ul(x, y)   div64_u64((x), (y))
+
+/**
+ * div_u64_rem - unsigned 64bit divide with 32bit divisor with remainder
+ * @dividend: unsigned 64bit dividend
+ * @divisor: unsigned 32bit divisor
+ * @remainder: pointer to unsigned 32bit remainder
+ *
+ * Return: sets ``*remainder``, then returns dividend / divisor
+ *
+ * This is commonly provided by 32bit archs to provide an optimized 64bit
+ * divide.
+ */
+static inline uint64_t div_u64_rem(uint64_t dividend, uint32_t divisor, uint32_t *remainder)
+{
+    *remainder = dividend % divisor;
+    return dividend / divisor;
+}
+
+/**
+ * div_s64_rem - signed 64bit divide with 32bit divisor with remainder
+ * @dividend: signed 64bit dividend
+ * @divisor: signed 32bit divisor
+ * @remainder: pointer to signed 32bit remainder
+ *
+ * Return: sets ``*remainder``, then returns dividend / divisor
+ */
+static inline int64_t div_s64_rem(int64_t dividend, int32_t divisor, int32_t *remainder)
+{
+    *remainder = dividend % divisor;
+    return dividend / divisor;
+}
+
+/**
+ * div64_u64_rem - unsigned 64bit divide with 64bit divisor and remainder
+ * @dividend: unsigned 64bit dividend
+ * @divisor: unsigned 64bit divisor
+ * @remainder: pointer to unsigned 64bit remainder
+ *
+ * Return: sets ``*remainder``, then returns dividend / divisor
+ */
+static inline uint64_t div64_u64_rem(uint64_t dividend, uint64_t divisor, uint64_t *remainder)
+{
+    *remainder = dividend % divisor;
+    return dividend / divisor;
+}
+
+/**
+ * div64_uint64_t - unsigned 64bit divide with 64bit divisor
+ * @dividend: unsigned 64bit dividend
+ * @divisor: unsigned 64bit divisor
+ *
+ * Return: dividend / divisor
+ */
+static inline uint64_t div64_u64(uint64_t dividend, uint64_t divisor)
+{
+    return dividend / divisor;
+}
+
+/**
+ * div64_int64_t - signed 64bit divide with 64bit divisor
+ * @dividend: signed 64bit dividend
+ * @divisor: signed 64bit divisor
+ *
+ * Return: dividend / divisor
+ */
+static inline int64_t div64_s64(int64_t dividend, int64_t divisor)
+{
+    return dividend / divisor;
+}
+
+/**
+ * div_uint64_t - unsigned 64bit divide with 32bit divisor
+ * @dividend: unsigned 64bit dividend
+ * @divisor: unsigned 32bit divisor
+ *
+ * This is the most common 64bit divide and should be used if possible,
+ * as many 32bit archs can optimize this variant better than a full 64bit
+ * divide.
+ *
+ * Return: dividend / divisor
+ */
+#ifndef div_u64
+static inline uint64_t div_u64(uint64_t dividend, uint32_t divisor)
+{
+    uint32_t remainder;
+    return div_u64_rem(dividend, divisor, &remainder);
+}
+#endif
+
+/**
+ * div_int64_t - signed 64bit divide with 32bit divisor
+ * @dividend: signed 64bit dividend
+ * @divisor: signed 32bit divisor
+ *
+ * Return: dividend / divisor
+ */
+#ifndef div_s64
+static inline int64_t div_s64(int64_t dividend, int32_t divisor)
+{
+    int32_t remainder;
+    return div_s64_rem(dividend, divisor, &remainder);
+}
+#endif

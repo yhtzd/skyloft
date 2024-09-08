@@ -1,18 +1,55 @@
-Wakeup Latencies percentiles (usec) runtime 1 (s) (9718 total samples)
-          50.0th: 17         (2792 samples)
-          90.0th: 77         (3716 samples)
-        * 99.0th: 116        (751 samples)
-          99.9th: 149        (76 samples)
-          min=1, max=179
-Request Latencies percentiles (usec) runtime 1 (s) (9857 total samples)
-          50.0th: 9648       (3377 samples)
-          90.0th: 12176      (3914 samples)
-        * 99.0th: 12240      (520 samples)
-          99.9th: 12688      (58 samples)
-          min=2511, max=12818
-RPS percentiles (requests) runtime 1 (s) (2 total samples)
-          20.0th: 0          (1 samples)
-        * 50.0th: 0          (0 samples)
-          90.0th: 9744       (1 samples)
-          min=9740, max=9740
-average rps: 9857
+Wakeup Latencies percentiles (usec) runtime 5 (s) (46721 total samples)
+	  50.0th: 16         (12281 samples)
+	  90.0th: 76         (18125 samples)
+	* 99.0th: 117        (4320 samples)
+	  99.9th: 123        (257 samples)
+	  min=1, max=375
+Request Latencies percentiles (usec) runtime 5 (s) (47215 total samples)
+	  50.0th: 9648       (12450 samples)
+	  90.0th: 12208      (19431 samples)
+	* 99.0th: 16480      (3149 samples)
+	  99.9th: 20576      (471 samples)
+	  min=2511, max=20582
+RPS percentiles (requests) runtime 5 (s) (6 total samples)
+	  20.0th: 8976       (2 samples)
+	* 50.0th: 9264       (1 samples)
+	  90.0th: 9808       (3 samples)
+	  min=8965, max=9811
+current rps: 8965
+Wakeup Latencies percentiles (usec) runtime 10 (s) (94945 total samples)
+	  50.0th: 16         (24176 samples)
+	  90.0th: 76         (37337 samples)
+	* 99.0th: 117        (8812 samples)
+	  99.9th: 122        (527 samples)
+	  min=1, max=375
+Request Latencies percentiles (usec) runtime 10 (s) (96063 total samples)
+	  50.0th: 9648       (25889 samples)
+	  90.0th: 12208      (40501 samples)
+	* 99.0th: 16416      (4780 samples)
+	  99.9th: 20512      (580 samples)
+	  min=2511, max=20582
+RPS percentiles (requests) runtime 10 (s) (11 total samples)
+	  20.0th: 9264       (3 samples)
+	* 50.0th: 9712       (3 samples)
+	  90.0th: 9808       (5 samples)
+	  min=8965, max=9811
+current rps: 9792
+Wakeup Latencies percentiles (usec) runtime 10 (s) (94958 total samples)
+	  50.0th: 16         (24182 samples)
+	  90.0th: 76         (37340 samples)
+	* 99.0th: 117        (8813 samples)
+	  99.9th: 122        (527 samples)
+	  min=1, max=375
+Request Latencies percentiles (usec) runtime 10 (s) (96156 total samples)
+	  50.0th: 9648       (25919 samples)
+	  90.0th: 12208      (40547 samples)
+	* 99.0th: 16416      (4781 samples)
+	  99.9th: 20512      (580 samples)
+	  min=2511, max=20582
+RPS percentiles (requests) runtime 10 (s) (11 total samples)
+	  20.0th: 9264       (3 samples)
+	* 50.0th: 9712       (3 samples)
+	  90.0th: 9808       (5 samples)
+	  min=8965, max=9811
+average rps: 9616
+timeout: the monitored command dumped core

@@ -139,10 +139,11 @@ __noreturn __noinline void schedule()
     STAT_CYCLES_BEGIN(elapsed);
 again:
     next = __sched_pick_next();
-#ifdef SKYLOFT_SCHED_CFS
-    __sched_percpu_unlock(g_logic_cpu_id);
-#endif
     if (unlikely(!next)) {
+#if defined(SKYLOFT_SCHED_CFS) || defined(SKYLOFT_SCHED_EEVDF)
+        // log_debug("%s: again, unlocking", __func__);
+        __sched_percpu_unlock(g_logic_cpu_id);
+#endif
 #ifdef SCHED_PERCPU
 #ifdef SKYLOFT_DPDK
         if ((next = softirq_task(localk, SOFTIRQ_MAX_BUDGET))) {
@@ -155,7 +156,7 @@ again:
 #endif
         /* optional load balance */
         __sched_balance();
-#ifdef SKYLOFT_SCHED_CFS
+#if defined(SKYLOFT_SCHED_CFS) || defined(SKYLOFT_SCHED_EEVDF)
         __sched_percpu_lock(g_logic_cpu_id);
 #endif
 #endif
@@ -226,7 +227,8 @@ int sched_init_percpu()
         return -1;
     }
 
-    __curr = __idle = task;
+    __curr = NULL;
+    __idle = task;
 
     extern uint32_t *rcu_gen_percpu[USED_CPUS];
     rcu_gen_percpu[g_logic_cpu_id] = &rcu_gen;
@@ -361,9 +363,10 @@ void task_wakeup(struct task *task)
 void task_block(spinlock_t *lock)
 {
     int flags;
+
     assert_preempt_disabled();
     assert_spin_lock_held(lock);
-    local_irq_disable();
+
     local_irq_save(flags);
     preempt_enable();
 

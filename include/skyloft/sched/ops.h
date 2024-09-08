@@ -16,6 +16,10 @@
 #include "policy/cfs.h"
 #define SCHED_NAME        "cfs"
 #define SCHED_OP(op_name) cfs_##op_name
+#elif defined(SKYLOFT_SCHED_EEVDF)
+#include "policy/eevdf.h"
+#define SCHED_NAME        "eevdf"
+#define SCHED_OP(op_name) eevdf_##op_name
 #elif defined(SKYLOFT_SCHED_SQ)
 #include "policy/sq.h"
 #define SCHED_NAME        "sq"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <skyloft/sched.h>
+#include <utils/assert.h>
 
 /*
  * These are per-kthread stat counters. It's recommended that most counters be
@@ -17,8 +17,6 @@ enum {
     STAT_TASKS_STOLEN,
     STAT_IDLE,
     STAT_IDLE_CYCLES,
-    // STAT_WAKEUP,
-    // STAT_WAKEUP_CYCLES,
     STAT_SOFTIRQS_LOCAL,
     STAT_SOFTIRQ_CYCLES,
     STAT_ALLOC,
@@ -27,7 +25,10 @@ enum {
     STAT_TX,
 #ifdef SKYLOFT_UINTR
     STAT_UINTR,
-    // STAT_UINTR_CYCLES,
+#ifdef UTIMER
+    STAT_UTIMER_SENDS,
+    STAT_UTIMER_CYCLES,
+#endif
 #endif
 
     /* total number of counters */
@@ -35,22 +36,13 @@ enum {
 };
 
 static const char *STAT_STR[] = {
-    "local_spawns",
-    "switch_to",
-    "tasks_stolen",
-    "idle",
-    "idle_cycles",
-    // "wakeup",
-    // "wakeup_cycles",
-    "softirqs_local",
-    "softirq_cycles",
-    "alloc",
-    "alloc_cycles",
-    "rx",
-    "tx",
+    "local_spawns",   "switch_to",     "tasks_stolen", "idle", "idle_cycles", "softirqs_local",
+    "softirq_cycles", "alloc",         "alloc_cycles", "rx",   "tx",
 #ifdef SKYLOFT_UINTR
     "uintr",
-    // "uintr_cycles",
+#ifdef UTIMER
+    "utimer_sends",   "utimer_cycles",
+#endif
 #endif
 };
 
@@ -70,13 +62,9 @@ static inline const char *stat_str(int idx)
  */
 #define ADD_STAT_FORCE(counter, val) (thisk()->stats[STAT_##counter] += val)
 #ifdef SKYLOFT_STAT
-#define ADD_STAT(counter, val) ADD_STAT_FORCE(counter, val)
-#define STAT_CYCLES_BEGIN(timer) ({ \
-    timer = now_tsc(); \
-})
-#define ADD_STAT_CYCLES(counter, timer) ({ \
-    ADD_STAT_FORCE(counter, now_tsc() - timer); \
-})
+#define ADD_STAT(counter, val)          ADD_STAT_FORCE(counter, val)
+#define STAT_CYCLES_BEGIN(timer)        ({ timer = now_tsc(); })
+#define ADD_STAT_CYCLES(counter, timer) ({ ADD_STAT_FORCE(counter, now_tsc() - timer); })
 #else
 #define ADD_STAT(counter, val)
 #define STAT_CYCLES_BEGIN(timer) ((void)timer)

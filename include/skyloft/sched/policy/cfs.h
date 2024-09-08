@@ -19,6 +19,7 @@ struct load_weight {
 /* CFS percpu state */
 struct cfs_rq {
     spinlock_t lock;
+    uint8_t pad0[60];
     /* sum of load of all tasks */
     struct load_weight load;
     uint32_t nr_running;
@@ -82,6 +83,7 @@ struct task *cfs_sched_pick_next();
 int cfs_sched_spawn(struct task *, int);
 void cfs_sched_yield();
 void cfs_sched_wakeup(struct task *);
+void cfs_sched_block();
 bool cfs_sched_preempt();
 int cfs_sched_init_task(struct task *);
 void cfs_sched_finish_task(struct task *);

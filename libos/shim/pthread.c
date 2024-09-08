@@ -29,9 +29,10 @@ static void __trampoline(void *arg)
         spin_unlock_np(&j->lock);
         return;
     }
-    if (j->waiter != NULL) {
-        task_enqueue(0, j->waiter);
-    }
+
+    if (j->waiter)
+        task_wakeup(j->waiter);
+
     j->waiter = task_self();
     task_block(&j->lock);
 }

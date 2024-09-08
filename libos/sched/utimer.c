@@ -1,6 +1,7 @@
 #include <skyloft/params.h>
 #include <skyloft/sched.h>
 #include <skyloft/sched/utimer.h>
+#include <skyloft/stat.h>
 
 #include <utils/log.h>
 #include <utils/time.h>
@@ -33,6 +34,7 @@ static int utimer_init(void)
 __noreturn void utimer_main(void)
 {
     int i;
+    uint64_t stat;
 
     utimer_init();
 
@@ -40,9 +42,12 @@ __noreturn void utimer_main(void)
 
     while (true) {
         for (i = 0; i < proc->nr_ks; i++) {
+            STAT_CYCLES_BEGIN(stat);
             if (now_ns() > utimer.deadline[i]) {
                 _senduipi(utimer.uintr_index[i]);
                 utimer.deadline[i] = now_ns() + NSEC_PER_TICK;
+                ADD_STAT(UTIMER_SENDS, 1);
+                ADD_STAT_CYCLES(UTIMER_CYCLES, stat);
             }
         }
     }

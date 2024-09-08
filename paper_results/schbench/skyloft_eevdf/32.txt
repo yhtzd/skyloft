@@ -1,0 +1,55 @@
+Wakeup Latencies percentiles (usec) runtime 5 (s) (43792 total samples)
+	  50.0th: 2          (0 samples)
+	  90.0th: 20         (16268 samples)
+	* 99.0th: 23         (3503 samples)
+	  99.9th: 27         (288 samples)
+	  min=1, max=62
+Request Latencies percentiles (usec) runtime 5 (s) (44691 total samples)
+	  50.0th: 2676       (5782 samples)
+	  90.0th: 4808       (19124 samples)
+	* 99.0th: 4824       (2950 samples)
+	  99.9th: 5080       (240 samples)
+	  min=2513, max=6083
+RPS percentiles (requests) runtime 5 (s) (6 total samples)
+	  20.0th: 8336       (2 samples)
+	* 50.0th: 8368       (1 samples)
+	  90.0th: 9488       (3 samples)
+	  min=8348, max=9503
+current rps: 9249
+Wakeup Latencies percentiles (usec) runtime 10 (s) (87668 total samples)
+	  50.0th: 2          (0 samples)
+	  90.0th: 20         (32565 samples)
+	* 99.0th: 23         (6866 samples)
+	  99.9th: 25         (545 samples)
+	  min=1, max=62
+Request Latencies percentiles (usec) runtime 10 (s) (89342 total samples)
+	  50.0th: 2652       (9825 samples)
+	  90.0th: 4808       (38331 samples)
+	* 99.0th: 4824       (5905 samples)
+	  99.9th: 5064       (267 samples)
+	  min=2513, max=6083
+RPS percentiles (requests) runtime 10 (s) (11 total samples)
+	  20.0th: 8368       (3 samples)
+	* 50.0th: 8816       (3 samples)
+	  90.0th: 9296       (4 samples)
+	  min=8348, max=9503
+current rps: 8837
+Wakeup Latencies percentiles (usec) runtime 10 (s) (87668 total samples)
+	  50.0th: 2          (0 samples)
+	  90.0th: 20         (32565 samples)
+	* 99.0th: 23         (6866 samples)
+	  99.9th: 25         (545 samples)
+	  min=1, max=62
+Request Latencies percentiles (usec) runtime 10 (s) (89374 total samples)
+	  50.0th: 2652       (9828 samples)
+	  90.0th: 4808       (38350 samples)
+	* 99.0th: 4824       (5907 samples)
+	  99.9th: 5064       (267 samples)
+	  min=2513, max=6083
+RPS percentiles (requests) runtime 10 (s) (11 total samples)
+	  20.0th: 8368       (3 samples)
+	* 50.0th: 8816       (3 samples)
+	  90.0th: 9296       (4 samples)
+	  min=8348, max=9503
+average rps: 8937
+timeout: the monitored command dumped core

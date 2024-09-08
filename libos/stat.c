@@ -12,7 +12,7 @@ void print_stats(void)
     printf("%3c", ' ');
     for (i = 0; i < STAT_NR; i++) printf("%16s", stat_str(i));
     printf("\n");
-    for (i = 0; i < proc->nr_ks; i++) {
+    for (i = 0; i < USED_CPUS; i++) {
         printf("%2d:", i);
         for (j = 0; j < STAT_NR; j++) printf("%16ld", proc->all_ks[i].stats[j]);
         printf("\n");

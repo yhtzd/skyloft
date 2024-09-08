@@ -9,8 +9,6 @@ cmd="$bin -n10 -F128 -m1 -r10 -i5"
 mkdir -p $dir
 echo "cores,wake99,rps50,lat99" > $dir/all.csv
 
-# cores="4 8 16 24 32 40 48"
-# cores="64 72 80 96 112 128 144 160 176 192 208 224 240 256"
 cores=$(seq 8 8 96)
 
 for i in $cores; do

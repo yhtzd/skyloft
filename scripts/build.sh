@@ -11,7 +11,7 @@ if [[ $app_name =~ synthetic-(.*) ]]; then
     build_cmd="make install SCHED=${BASH_REMATCH[1]} UINTR=1 DPDK=0"
 elif [[ $app_name =~ schbench-([a-zA-Z0-9]+).* ]]; then
     params_file=$script_dir/params/$app_name.params
-    build_cmd="make schbench SCHED=${BASH_REMATCH[1]} UINTR=1 DPDK=0"
+    build_cmd="make schbench SCHED=${BASH_REMATCH[1]} UINTR=1 DPDK=0 LOG=warn"
 elif [ $app_name == "memcached" ]; then
     params_file=$script_dir/params/$app_name.params
     build_cmd="make memcached SCHED=fifo UINTR=0 DPDK=1"

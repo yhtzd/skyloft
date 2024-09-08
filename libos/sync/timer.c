@@ -217,13 +217,11 @@ try_again:
     if (e->k != k) {
         /* Timer was merged to a different heap */
         spin_unlock_np(&k->timer_lock);
-        preempt_enable();
         goto try_again;
     }
 
     if (!e->armed) {
         spin_unlock_np(&k->timer_lock);
-        preempt_enable();
         return false;
     }
     e->armed = false;
@@ -231,7 +229,6 @@ try_again:
     last = --k->nr_timers;
     if (e->idx == last) {
         spin_unlock_np(&k->timer_lock);
-        preempt_enable();
         return true;
     }
 
@@ -240,8 +237,6 @@ try_again:
     sift_up(k->timers, e->idx);
     sift_down(k->timers, e->idx, k->nr_timers);
     spin_unlock_np(&k->timer_lock);
-
-    preempt_enable();
     return true;
 }
 
