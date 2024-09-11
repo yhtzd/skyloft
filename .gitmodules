@@ -1,8 +1,8 @@
 [submodule "apps/schbench"]
 	path = apps/schbench
-	url = git@github.com:yhtzd/schbench.git
+	url = https://github.com/yhtzd/schbench.git
 	branch = skyloft
 [submodule "apps/memcached"]
 	path = apps/memcached
-	url = git@github.com:yhtzd/memcached.git
+	url = https://github.com/yhtzd/memcached.git
 	branch = skyloft
