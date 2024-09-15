@@ -48,4 +48,5 @@ done < $params_file
 
 # Build the application
 
+cd $script_dir/..
 eval $build_cmd
